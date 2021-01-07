@@ -18,6 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include <Arduino.h>
+#include "OC_core.h"
+#include "HemisphereApplet.h"
+
 #define HEM_CLOCKDIV_MAX 32
 
 class ClockDivider : public HemisphereApplet {

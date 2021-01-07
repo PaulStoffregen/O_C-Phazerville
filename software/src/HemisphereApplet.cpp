@@ -1,5 +1,8 @@
 #include "HemisphereApplet.h"
 
+int HemisphereApplet::cursor_countdown[2];
+int HemisphereApplet::cursor[2];
+
 void HemisphereApplet::BaseStart(bool hemisphere_) {
     hemisphere = hemisphere_;
 
@@ -73,7 +76,4 @@ bool HemisphereApplet::Clock(int ch, bool physical) {
     }
     return clocked;
 }
-
-int HemisphereApplet::cursor_countdown[2];
-int HemisphereApplet::cursor[2];
 

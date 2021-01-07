@@ -18,12 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#ifndef _HEM_APP_HEMISPHERE_H_
+#define _HEM_APP_HEMISPHERE_H_
+
 #include "OC_DAC.h"
 #include "OC_digital_inputs.h"
 #include "OC_visualfx.h"
+#include "OC_apps.h"
+#include "OC_ui.h"
+
 #include "OC_patterns.h"
 #include "src/drivers/FreqMeasure/OC_FreqMeasure.h"
-namespace menu = OC::menu;
 
 #include "HemisphereApplet.h"
 #include "HSApplication.h"
@@ -171,6 +176,8 @@ HemispherePreset *hem_active_preset;
 ////////////////////////////////////////////////////////////////////////////////
 
 using namespace HS;
+
+void ReceiveManagerSysEx();
 
 class HemisphereManager : public HSApplication {
 public:
@@ -914,3 +921,5 @@ void HEMISPHERE_handleButtonEvent(const UI::Event &event) {
 void HEMISPHERE_handleEncoderEvent(const UI::Event &event) {
     manager.DelegateEncoderMovement(event);
 }
+
+#endif

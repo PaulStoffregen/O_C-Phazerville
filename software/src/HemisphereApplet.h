@@ -26,9 +26,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
+#ifndef _HEM_APPLET_H_
+#define _HEM_APPLET_H_
 
 #include <Arduino.h>
 #include "OC_core.h"
+
 #include "OC_digital_inputs.h"
 #include "OC_DAC.h"
 #include "OC_ADC.h"
@@ -421,3 +424,4 @@ private:
     bool full_screen;
 };
 
+#endif // _HEM_APPLET_H_
