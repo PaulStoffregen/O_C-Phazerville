@@ -25,6 +25,8 @@ enum SCALE_EDIT_PAGES {
   _SCALING
 };
 
+// TODO: Replace Owner callbacks with some kind of pass-by-ref struct.
+//       We need to eliminate the template nature of this to reduce code size.
 template <typename Owner>
 class ScaleEditor {
 public:
