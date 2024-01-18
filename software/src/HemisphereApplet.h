@@ -98,7 +98,7 @@ namespace HS {
 typedef struct Applet {
   int id;
   uint8_t categories;
-  HemisphereApplet* instance;
+  HemisphereApplet* instance[2];
   /*
   void (*Start)(bool); // Initialize when selected
   void (*Controller)(bool, bool);  // Interrupt Service Routine
@@ -118,9 +118,6 @@ typedef struct {
 } AppletParam;
 
 static IOFrame frame;
-
-extern Applet available_applets[];
-extern Applet clock_setup_applet;
 
 }
 

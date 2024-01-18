@@ -345,4 +345,4 @@ private:
     }
 };
 
-ClockSetup ClockSetup_instance[1];
+ClockSetup ClockSetup_instance[2];

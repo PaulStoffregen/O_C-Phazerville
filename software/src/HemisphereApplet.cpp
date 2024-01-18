@@ -47,7 +47,7 @@ void HemisphereApplet::BaseView() {
     gfxHeader(applet_name());
     // If active, draw the full screen view instead of the application screen
     if (full_screen) this->DrawFullScreen();
-    else View();
+    else this->View();
 }
 
 /*

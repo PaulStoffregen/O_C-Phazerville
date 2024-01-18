@@ -33,9 +33,9 @@
 #include "util/util_pagestorage.h"
 #include "util/EEPROMStorage.h"
 
+#include "APP_HEMISPHERE.h"
 #include "APP_CALIBR8OR.h"
 #include "APP_SCENES.h"
-#include "APP_HEMISPHERE.h"
 #include "APP_ASR.h"
 #include "APP_H1200.h"
 #include "APP_AUTOMATONNETZ.h"
