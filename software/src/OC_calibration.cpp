@@ -22,6 +22,7 @@
 #include "src/drivers/ADC/OC_util_ADC.h"
 #include "util/util_debugpins.h"
 #include "OC_calibration.h"
+#include "VBiasManager.h"
 namespace menu = OC::menu;
 
 using OC::DAC;

@@ -117,7 +117,7 @@ typedef struct {
     uint8_t x, y, w;
 } AppletParam;
 
-static IOFrame frame;
+extern IOFrame frame;
 
 }
 

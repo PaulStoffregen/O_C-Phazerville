@@ -1,5 +1,7 @@
 #include "HemisphereApplet.h"
 
+IOFrame HS::frame;
+
 int HemisphereApplet::cursor_countdown[2];
 int HemisphereApplet::cursor[2];
 
