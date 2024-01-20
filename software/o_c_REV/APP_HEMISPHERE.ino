@@ -500,6 +500,10 @@ public:
         }
     }
 
+    void SendScreenshot() {
+      graphics.QueueSysex();
+    }
+
     void ToggleClockRun() {
         if (clock_m->IsRunning()) {
             clock_m->Stop();
@@ -867,7 +871,8 @@ void HEMISPHERE_handleButtonEvent(const UI::Event &event) {
     case UI::EVENT_BUTTON_DOWN:
         #ifdef VOR
         if (event.control == OC::CONTROL_BUTTON_M) {
-            manager.ToggleClockRun();
+            //manager.ToggleClockRun();
+            manager.SendScreenshot();
             OC::ui.SetButtonIgnoreMask(); // ignore release and long-press
             break;
         }

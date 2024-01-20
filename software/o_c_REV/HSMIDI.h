@@ -106,7 +106,7 @@ const char* const midi_fn_name[HEM_MIDI_MAX_FUNCTION + 1] = {"None", "Note#", "T
  * of compression. And Teensy really needs efficiency.
  */
 
-#define SYSEX_DATA_MAX_SIZE 60
+#define SYSEX_DATA_MAX_SIZE 160
 
 /*
  * SysExData is a sort of generic data structure, containing a size, and a fixed-length
@@ -271,7 +271,7 @@ protected:
             sysex[size++] = packed.data[i];
         }
         sysex[size++] = 0xf7; // End of exclusive
-        usbMIDI.sendSysEx(size, sysex);
+        usbMIDI.sendSysEx(size, sysex, true);
         usbMIDI.send_now();
     }
 

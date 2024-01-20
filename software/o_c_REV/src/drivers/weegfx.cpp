@@ -24,6 +24,7 @@
 
 #include "weegfx.h"
 #include "../../util/util_macros.h"
+#include "../../HSMIDI.h"
 
 namespace weegfx {
 enum DRAW_MODE {
@@ -124,6 +125,41 @@ void Graphics::Begin(uint8_t *frame, bool clear_frame) {
 
 void Graphics::End() {
   frame_ = NULL;
+}
+
+void Graphics::SendSysex() {
+  if (sysex_q) {
+    const size_t kChunkSize = 126;
+
+    uint8_t sysex[kChunkSize*2]; // too large, just to be safe. max should actually be (kChunkSize*8/7 + 5)
+    uint32_t frame_idx = 0;
+    uint32_t size = 0;
+
+    while (frame_idx < kFrameSize) {
+      // Pack it up, ship it out
+      UnpackedData unpacked;
+      unpacked.set_data(constrain(kChunkSize, 0, kFrameSize - frame_idx), frame_ + frame_idx);
+      frame_idx += unpacked.size;
+
+      PackedData packed = unpacked.pack();
+
+      // SendSysEx
+      size = 0;
+      sysex[size++] = 0xf0;      // Start of exclusive
+      sysex[size++] = 0x7d;      // Non-Commercial Manufacturer
+      sysex[size++] = 0x69;      // Phazerville (lol)
+      sysex[size++] = 0x69;  // Target product
+      for (uint8_t i = 0; i < packed.size; i++)
+      {
+          sysex[size++] = packed.data[i];
+      }
+      sysex[size++] = 0xf7; // End of exclusive
+
+      usbMIDI.sendSysEx(size, sysex, true);
+      usbMIDI.send_now();
+    }
+    sysex_q = 0;
+  }
 }
 
 template <weegfx::DRAW_MODE draw_mode>

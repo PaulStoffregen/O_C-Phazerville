@@ -69,6 +69,7 @@ do { \
     do {} while(0)
 
 #define GRAPHICS_END_FRAME() \
+    graphics.SendSysex(); \
     graphics.End(); \
     display::frame_buffer.written(); \
   } \

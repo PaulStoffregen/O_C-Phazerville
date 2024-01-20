@@ -107,8 +107,12 @@ public:
 
   inline void drawAlignedByte(coord_t x, coord_t y, uint8_t byte) __attribute__((always_inline));
 
+  void QueueSysex() { sysex_q = 1; }
+  void SendSysex();
+
 private:
   uint8_t *frame_;
+  bool sysex_q = 0;
 
   coord_t text_x_;
   coord_t text_y_;
