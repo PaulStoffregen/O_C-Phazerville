@@ -112,6 +112,9 @@ void FASTRUN CORE_timer_ISR() {
 void setup() {
   delay(50);
   Serial.begin(9600);
+#ifdef PAULS_UGLY_T41_HARDWARE_TEST && defined(ARDUINO_TEENSY41)
+  Serial8.begin(31250); // MIDI expansion port on O_C T4.1
+#endif
 
 #if defined(__IMXRT1062__)
   if (CrashReport) {

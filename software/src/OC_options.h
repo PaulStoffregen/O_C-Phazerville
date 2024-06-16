@@ -9,6 +9,9 @@
 #ifndef OC_OPTIONS_H_
 #define OC_OPTIONS_H_
 
+/* ------------ hardware tests for OC T4.1 using Arduino Serial Monitor: ----------------------------  */
+#define PAULS_UGLY_T41_HARDWARE_TEST
+
 /* ------------ uncomment for Buchla/non-octaval/quartertone support: -------------------------------  */
 //#define BUCHLA_SUPPORT
 /* ------------ uncomment for use with Northernlight cOC program card: ------------------------------  */

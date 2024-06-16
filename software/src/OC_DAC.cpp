@@ -259,6 +259,10 @@ void DAC::set_Vbias(uint32_t data) {
 DAC::CalibrationData *DAC::calibration_data_ = nullptr;
 /*static*/
 uint32_t DAC::values_[DAC_CHANNEL_LAST];
+#ifdef PAULS_UGLY_T41_HARDWARE_TEST
+bool DAC::use_override = false;
+uint32_t DAC::override_values[8];
+#endif
 /*static*/
 uint16_t DAC::history_[DAC_CHANNEL_LAST][DAC::kHistoryDepth];
 /*static*/ 

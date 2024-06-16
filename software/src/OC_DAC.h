@@ -231,6 +231,27 @@ public:
   static void Update() {
     #if defined(__IMXRT1062__) && defined(ARDUINO_TEENSY41)
       if (DAC8568_Uses_SPI) {
+#ifdef PAULS_UGLY_T41_HARDWARE_TEST
+        if (use_override) {
+          dac8568_set_channel(0, override_values[0]);
+          dac8568_set_channel(1, override_values[1]);
+          dac8568_set_channel(2, override_values[2]);
+          dac8568_set_channel(3, override_values[3]);
+          dac8568_set_channel(4, override_values[4]);
+          dac8568_set_channel(5, override_values[5]);
+          dac8568_set_channel(6, override_values[6]);
+          dac8568_set_channel(7, override_values[7]);
+        } else {
+          dac8568_set_channel(0, values_[DAC_CHANNEL_A]);
+          dac8568_set_channel(1, values_[DAC_CHANNEL_B]);
+          dac8568_set_channel(2, values_[DAC_CHANNEL_C]);
+          dac8568_set_channel(3, values_[DAC_CHANNEL_D]);
+          dac8568_set_channel(4, values_[DAC_CHANNEL_E]);
+          dac8568_set_channel(5, values_[DAC_CHANNEL_F]);
+          dac8568_set_channel(6, values_[DAC_CHANNEL_G]);
+          dac8568_set_channel(7, values_[DAC_CHANNEL_H]);
+        }
+#else
         dac8568_set_channel(0, values_[DAC_CHANNEL_A]);
         dac8568_set_channel(1, values_[DAC_CHANNEL_B]);
         dac8568_set_channel(2, values_[DAC_CHANNEL_C]);
@@ -239,6 +260,7 @@ public:
         dac8568_set_channel(5, values_[DAC_CHANNEL_F]);
         dac8568_set_channel(6, values_[DAC_CHANNEL_G]);
         dac8568_set_channel(7, values_[DAC_CHANNEL_H]);
+#endif // PAULS_UGLY_T41_HARDWARE_TEST
       } else {
     #endif
         set8565_CHA(values_[DAC_CHANNEL_A]);
@@ -269,6 +291,10 @@ public:
     while (count--)
       *dst++ = *src++;
   }
+#ifdef PAULS_UGLY_T41_HARDWARE_TEST
+  static bool use_override;
+  static uint32_t override_values[8];
+#endif
 
 private:
   static CalibrationData *calibration_data_;

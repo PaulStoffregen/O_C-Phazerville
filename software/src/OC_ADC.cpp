@@ -2,6 +2,7 @@
 #include "OC_gpio.h"
 #include "DMAChannel.h"
 #include <algorithm>
+#include "OC_DAC.h"
 
 namespace OC {
 
@@ -535,6 +536,104 @@ static void Init_Teensy41_ADC33131D_chip() {
       update<ADC_CHANNEL_3>(sum[6] * mult / count);
       update<ADC_CHANNEL_4>(sum[7] * mult / count);
       old_poffset = (old_poffset + count * sizeof(adc33131_frame_t)) % sizeof(adc_buffer);
+
+#ifdef PAULS_UGLY_T41_HARDWARE_TEST
+/*
+ * Hardware                How To Verify
+ * --------                -------------
+ * display                 use user interface
+ * encoders                should respond (if backwards, clear EEPROM)
+ *
+ * trigger inputs          run PAULS_UGLY_T41_HARDWARE_TEST code prints all inputs
+ * analog CV inputs        connect lab bench power supply to patch code, plug into inputs
+ * pushbuttons             press 5 buttons, watch serial monitor
+ * MIDI input              connect MIDI keyboard, watch serial monitor for MIDI incoming
+ *
+ * analog CV outputs       send '1', '2', '3' to override DAC outputs
+ * MIDI output             send 'm' to transmit CC message, connect Turtle Beach USB-MIDI cable
+ *                             Linux: aseqdump -p "Turtle Beach USB MIDI 1x1"
+ *
+ * audio DAC output        run audio wav file player  O_C_WavFilePlayer.ino
+ *
+ * audio ADC input         run audio passthrough  O_C_AudioPassthrough.ino
+ *
+ * I2C expansion           Run Wire Scanner
+ *
+ * USB host                Run USBHost_t36 MIDI input
+ *
+ * ID voltage              printed in Arduino Serial Monitor at startup, approx 0.1 volt
+*/
+      // print all input signals to the serial monitor at a steady pace, so any
+      // input can be tested by just watching the scrolling info
+      static unsigned int counter = 0;
+      if (++counter > 500) {
+        counter = 0;
+        Serial.printf("PB: %d %d %d %d %d", digitalReadFast(14), digitalReadFast(15),
+          digitalReadFast(29), digitalReadFast(28), digitalReadFast(20));
+        Serial.printf(", TR: %d %d %d %d", digitalReadFast(0), digitalReadFast(1),
+          digitalReadFast(23), digitalReadFast(22));
+        Serial.printf(", CV: %5u %5u %5u %5u %5u %5u %5u %5u",
+          sum[0] * mult / count, sum[1] * mult / count,
+          sum[2] * mult / count, sum[3] * mult / count,
+          sum[4] * mult / count, sum[5] * mult / count,
+          sum[6] * mult / count, sum[7] * mult / count);
+        Serial.println();
+        if (Serial8.available()) {
+          Serial.print("MIDI IN:");
+          do {
+                  Serial.printf(" %02X", Serial8.read());
+          } while (Serial8.available());
+          Serial.println();
+        }
+      }
+      // listen for single-char commands to generate specific outputs
+      if (Serial.available()) {
+        int c = Serial.read();
+        if (c == '1') {
+          Serial.println("DAC 1-8: 0.5, 1.5, 2.5, 3.5, 1.0, 2.0, 3.0, 4.0");
+          OC::DAC::override_values[0] = 27827; // 0.5 volt
+          OC::DAC::override_values[1] = 34381; // 1.5 volt
+          OC::DAC::override_values[2] = 40934; // 2.5 volt
+          OC::DAC::override_values[3] = 47488; // 3.5 volt
+          OC::DAC::override_values[4] = 31104; // 1.0 volt
+          OC::DAC::override_values[5] = 37658; // 2.0 volt
+          OC::DAC::override_values[6] = 44211; // 3.0 volt
+          OC::DAC::override_values[7] = 50765; // 4.0 volt
+          OC::DAC::use_override = true;
+        }
+        if (c == '2') {
+          Serial.println("DAC 1-8: 1.0, 2.0, 3.0, 4.0, 4.0, 3.0, 2.0, 1.0");
+          OC::DAC::override_values[0] = 31104; // 1.0 volt
+          OC::DAC::override_values[1] = 37658; // 2.0 volt
+          OC::DAC::override_values[2] = 44211; // 3.0 volt
+          OC::DAC::override_values[3] = 50765; // 4.0 volt
+          OC::DAC::override_values[4] = 50765; // 4.0 volt
+          OC::DAC::override_values[5] = 44211; // 3.0 volt
+          OC::DAC::override_values[6] = 37658; // 2.0 volt
+          OC::DAC::override_values[7] = 31104; // 1.0 volt
+          OC::DAC::use_override = true;
+        }
+        if (c == '3') {
+          Serial.println("DAC 1-8: 3.5, 2.5, 1.5, 0.5, -1.0, -2.0, -2.5, -3.0");
+          OC::DAC::override_values[0] = 47488; //  3.5 volt
+          OC::DAC::override_values[1] = 40934; //  2.5 volt
+          OC::DAC::override_values[2] = 34381; //  1.5 volt
+          OC::DAC::override_values[3] = 27827; //  0.5 volt
+          OC::DAC::override_values[4] = 17997; // -1.0 volt
+          OC::DAC::override_values[5] = 11443; // -2.0 volt
+          OC::DAC::override_values[6] =  8167; // -2.5 volt
+          OC::DAC::override_values[7] =  4890; // -3.0 volt
+          OC::DAC::use_override = true;
+        }
+        if (c == 'm' || c == 'M') {
+          Serial.println("MIDI OUT");
+          Serial8.write(0xB1); // MIDI CC ch=1, volume=106 (6A)
+          Serial8.write(0x07);
+          Serial8.write(0x6A);
+        }
+      }
+#endif // PAULS_UGLY_T41_HARDWARE_TEST
+
     }
     return;
   }
