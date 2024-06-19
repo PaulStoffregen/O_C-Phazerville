@@ -112,7 +112,7 @@ void FASTRUN CORE_timer_ISR() {
 void setup() {
   delay(50);
   Serial.begin(9600);
-#ifdef PAULS_UGLY_T41_HARDWARE_TEST && defined(ARDUINO_TEENSY41)
+#if defined(PAULS_UGLY_T41_HARDWARE_TEST) && defined(ARDUINO_TEENSY41)
   Serial8.begin(31250); // MIDI expansion port on O_C T4.1
 #endif
 
@@ -125,6 +125,9 @@ void setup() {
 
   #if defined(ARDUINO_TEENSY41)
   OC::Pinout_Detect();
+#ifdef PAULS_UGLY_T41_HARDWARE_TEST
+  MIDI_Uses_Serial8 = false;
+#endif
 
   // Standard MIDI I/O on Serial8, only for Teensy 4.1
   if (MIDI_Uses_Serial8) {
@@ -268,11 +271,13 @@ void FASTRUN loop() {
 
     static size_t cap_idx = 0;
     // check for request from PC to capture the screen
+#ifndef PAULS_UGLY_T41_HARDWARE_TEST
     if (Serial && Serial.available() > 0) {
       do { Serial.read(); } while (Serial.available() > 0);
       display::frame_buffer.capture_request();
       cap_idx = 0;
     }
+#endif
 
     // check for frame buffer to have capture data ready
     const uint8_t *capture_data = display::frame_buffer.captured();

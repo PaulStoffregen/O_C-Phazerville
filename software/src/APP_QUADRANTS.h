@@ -365,7 +365,9 @@ public:
         ProcessMIDI(usbMIDI, usbHostMIDI, MIDI1);
         thisUSB.Task();
         ProcessMIDI(usbHostMIDI, usbMIDI, MIDI1);
-        ProcessMIDI(MIDI1, usbMIDI, usbHostMIDI);
+        if (MIDI_Uses_Serial8) {
+          ProcessMIDI(MIDI1, usbMIDI, usbHostMIDI);
+        }
 
         // Clock Setup applet handles internal clock duties
         ClockSetup_instance.Controller();
